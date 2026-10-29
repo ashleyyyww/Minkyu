@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>MuseDashUnlockDLC</AssemblyName>
+    <InteropDirectory>../../artifacts/interop-device/Il2CppAssemblies</InteropDirectory>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MelonLoader">
+      <HintPath>../../tools/melon_data/MelonLoader/net8/MelonLoader.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>../../tools/melon_data/MelonLoader/net8/0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Il2CppInterop.Runtime">
+      <HintPath>../../tools/melon_data/MelonLoader/net8/Il2CppInterop.Runtime.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="$(InteropDirectory)/*.dll">
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+</Project>

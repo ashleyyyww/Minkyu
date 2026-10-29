@@ -1,0 +1,16 @@
+**/bin/
+**/obj/
+artifacts/
+dependencies/
+tools/melon_data/
+build/
+.venv/
+*.keystore
+*.jks
+*.pem
+*.p12
+*.apk
+*.obb
+*.mdm
+*.log
+__pycache__/

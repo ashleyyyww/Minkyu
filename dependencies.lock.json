@@ -1,0 +1,26 @@
+{
+  "downloads": [
+    {
+      "path": "dependencies/melon_data.zip",
+      "url": "https://github.com/LemonLoader/MelonLoader/releases/download/0.6.5.1/melon_data.zip",
+      "sha256": "1c8bab9b0bf7a462f5efe03e8dc253f0f520357915641669d0910f6a9800f3a6"
+    },
+    {
+      "path": "dependencies/libunity.so",
+      "url": "https://github.com/LavaGang/MelonLoader.UnityDependencies/releases/download/2019.4.41/libunity.so.arm64-v8a",
+      "sha256": "50268324a505edc712d8f43fdfbb3322f8a11d93e325809c4f0df90307222004"
+    },
+    {
+      "path": "dependencies/UnityDependencies_2019.4.41.zip",
+      "url": "https://raw.githubusercontent.com/LavaGang/Unity-Runtime-Libraries/master/2019.4.41.zip",
+      "sha256": "788f2b8070d319642eb9403baa94c30d1074b547cc29ee5e794c1de705cb49aa"
+    }
+  ],
+  "sources": {
+    "CustomAlbums": "https://github.com/MDMods/CustomAlbums/tree/bdfc7e6c2f4be0c8b5c5b405ba26b287397f956f",
+    "LemonLoader": "https://github.com/LemonLoader/MelonLoader/tree/1ddfecd785a1036b391bbd7b0d8bed37f2c21c00",
+    "LemonLoaderInstaller": "https://github.com/LemonLoader/MelonLoaderInstaller/tree/ac443fce9f2ef890caddf8c64bba9194a43361bd",
+    "Il2CppInterop": "https://github.com/LemonLoader/Il2CppInterop/tree/5c0c44bfc31bc50023fb7426fc4a32b2086f672b"
+  },
+  "referenceBundleSha256": "88c41738c399e085aa34ad264a0203060dbea6fd9dc28547454df1e063449492"
+}

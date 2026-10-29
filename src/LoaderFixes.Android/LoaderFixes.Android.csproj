@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../Shared/LaunchFileVerification.cs" Link="LaunchFileVerification.cs" />
+    <Reference Include="MelonLoader">
+      <HintPath>../../tools/melon_data/MelonLoader/net8/MelonLoader.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="JNISharp">
+      <HintPath>../../tools/melon_data/MelonLoader/net8/JNISharp.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+</Project>

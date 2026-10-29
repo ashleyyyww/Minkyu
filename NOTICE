@@ -1,0 +1,48 @@
+Minkyu
+Copyright 2026 ashleyyyww
+
+The APK preparation and signing implementation includes code from
+LemonLoader/MelonLoaderInstaller, commit ac443fce9f2ef890caddf8c64bba9194a43361bd.
+The upstream license and author notices apply to that code. The vendored copy retains the AXML and V2 signing utilities used by the Android
+manager. The old installer pipeline, unused V1 signer and shared fallback
+signing key are omitted. The manager generates and validates a private key
+for each installation; invalid saved keys stop preparation.
+The retained signer requires complete stream reads and validates loaded key material.
+Source: https://github.com/LemonLoader/MelonLoaderInstaller
+License: licenses/LoaderPatcher-GPL-3.0.txt
+
+CustomAlbums chart conversion code is adapted from
+MDMods/CustomAlbums, commit bdfc7e6c2f4be0c8b5c5b405ba26b287397f956f.
+License and copyright: licenses/CustomAlbums-MIT.txt
+
+LemonLoader: https://github.com/LemonLoader/MelonLoader
+License: licenses/LemonLoader-Apache-2.0.txt
+Il2CppInterop: https://github.com/LemonLoader/Il2CppInterop
+License: licenses/Il2CppInterop-LGPL-3.0.txt
+Material Components: https://github.com/material-components/material-components-android
+License: licenses/MaterialComponents-Apache-2.0.txt
+
+Loader and runtime binary dependencies are pinned in dependencies.lock.json.
+Changes to loader assemblies are implemented in src/LoaderPatcher and
+src/LoaderFixes and src/LoaderFixes.Android. The source versions are linked in dependencies.lock.json.
+Unity runtime dependencies remain subject to their upstream terms.
+The Android API reference bundle contains generated declarations only;
+method implementations and native offsets are not included.
+No Muse Dash APK, OBB, game implementation, chart or private signing key is included in this repository.
+
+.NET for Android: https://github.com/dotnet/android
+License and notices: https://github.com/dotnet/android/blob/main/LICENSE.TXT
+NVorbis: https://github.com/NVorbis/NVorbis
+License: licenses/NVorbis-MIT.txt
+NLayer: https://github.com/naudio/NLayer
+License: licenses/NLayer-MIT.txt
+Newtonsoft.Json: https://github.com/JamesNK/Newtonsoft.Json
+License: licenses/NewtonsoftJson-MIT.txt
+Bouncy Castle: https://www.bouncycastle.org/
+License: licenses/BouncyCastle-MIT.txt
+
+Mono.Cecil (loader and build tools): https://github.com/jbevain/cecil
+License: licenses/MonoCecil-MIT.txt
+
+The cat artwork was supplied by the project owner. Code licenses do not grant
+permission to use third-party artwork or Muse Dash branding.
