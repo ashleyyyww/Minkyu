@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0-android</TargetFramework>
+    <SupportedOSPlatformVersion>24</SupportedOSPlatformVersion>
+    <OutputType>Exe</OutputType>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationId>app.minkyu.manager</ApplicationId>
+    <ApplicationVersion>7</ApplicationVersion>
+    <ApplicationDisplayVersion>0.2.0</ApplicationDisplayVersion>
+    <PublishTrimmed Condition="'$(Configuration)' != 'Release'">false</PublishTrimmed>
+    <RuntimeIdentifier>android-arm64</RuntimeIdentifier>
+    <AndroidPackageFormats>apk</AndroidPackageFormats>
+    <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
+    <RootNamespace>Minkyu.Manager</RootNamespace>
+    <AssemblyName>Minkyu</AssemblyName>
+    <LoaderPayloadDirectory Condition="'$(LoaderPayloadDirectory)'==''">../../dependencies/loader</LoaderPayloadDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <Optimize>true</Optimize>
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>none</DebugType>
+    <AndroidIncludeDebugSymbols>false</AndroidIncludeDebugSymbols>
+    <AndroidUseDebugRuntime>false</AndroidUseDebugRuntime>
+    <AndroidUseAssemblyStore>true</AndroidUseAssemblyStore>
+    <RunAOTCompilation>true</RunAOTCompilation>
+    <AndroidEnableProfiledAot>true</AndroidEnableProfiledAot>
+    <AndroidLinkTool>r8</AndroidLinkTool>
+    <PublishTrimmed>true</PublishTrimmed>
+    <TrimMode>partial</TrimMode>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <TrimmerRootAssembly Include="Minkyu" RootMode="All" />
+    <TrimmerRootAssembly Include="CustomAlbums.Core" RootMode="All" />
+    <TrimmerRootAssembly Include="Newtonsoft.Json" RootMode="All" />
+    <TrimmerRootAssembly Include="BouncyCastle.Crypto" RootMode="All" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Xamarin.Google.Android.Material" Version="1.14.0.6" />
+    <ProjectReference Include="../CustomAlbums.Core/CustomAlbums.Core.csproj" />
+    <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
+    <Compile Include="../../references/LemonLoaderInstaller/Core/Utilities/Axml/*.cs" Link="ThirdParty/Axml/%(Filename)%(Extension)" />
+    <Compile Include="../../references/LemonLoaderInstaller/Core/Utilities/Signing/*.cs" Link="ThirdParty/Signing/%(Filename)%(Extension)" />
+    <Compile Include="../../references/LemonLoaderInstaller/Core/IPatchLogger.cs" Link="ThirdParty/IPatchLogger.cs" />
+    <AndroidAsset Include="$(LoaderPayloadDirectory)/loader-payload.zip" Link="loader-payload.zip" />
+    <AndroidAsset Include="$(LoaderPayloadDirectory)/loader-payload.json" Link="loader-payload.json" />
+    <AndroidAsset Include="../../licenses/*.txt" Link="licenses/%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>
