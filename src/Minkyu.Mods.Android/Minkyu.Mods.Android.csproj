@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <AssemblyName>Minkyu.Mods.Android</AssemblyName>
+    <InteropDirectory Condition="'$(InteropDirectory)'==''">../../artifacts/interop-device/Il2CppAssemblies</InteropDirectory>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../CustomAlbums.Android/CustomAlbums.Android.csproj" />
+    <EmbeddedResource Include="../CustomAlbums.Android/Assets/minkyu-cat.png" LogicalName="Minkyu.ModIcon.png" />
+    <EmbeddedResource Include="Assets/scoreboard-characters.png" LogicalName="Minkyu.ScoreboardCharacters.png" />
+    <Reference Include="MelonLoader"><HintPath>../../tools/melon_data/MelonLoader/net8/MelonLoader.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="0Harmony"><HintPath>../../tools/melon_data/MelonLoader/net8/0Harmony.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Il2CppInterop.Runtime"><HintPath>../../tools/melon_data/MelonLoader/net8/Il2CppInterop.Runtime.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="$(InteropDirectory)/*.dll"><Private>false</Private></Reference>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+</Project>
