@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationId>app.minkyu.manager</ApplicationId>
-    <ApplicationVersion>7</ApplicationVersion>
+    <ApplicationVersion>8</ApplicationVersion>
     <ApplicationDisplayVersion>0.2.0</ApplicationDisplayVersion>
     <PublishTrimmed Condition="'$(Configuration)' != 'Release'">false</PublishTrimmed>
     <RuntimeIdentifier>android-arm64</RuntimeIdentifier>

@@ -45,6 +45,7 @@ managed = patch(
     root / "src/LoaderFixes.Android/bin/Release/net8.0/LoaderFixes.Android.dll",
 )
 files = {}
+files["assets/minkyu-bootstrap.dex"] = (root / "build/bootstrap/dex/classes.dex").read_bytes()
 with zipfile.ZipFile(root / "dependencies/melon_data.zip") as source:
     for entry in source.infolist():
         if entry.is_dir() or entry.filename.lower().endswith((".pdb", ".mdb")):
