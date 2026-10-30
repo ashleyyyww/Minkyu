@@ -31,6 +31,18 @@ Split APKs and games with an existing mod loader aren't supported.
 
 If you run into any crashes or bugs, DM me on Discord: `minkyu._.`
 
+## Screenshots
+
+![](docs/screenshots/1.jpg)
+
+![](docs/screenshots/2.jpg)
+
+![](docs/screenshots/3.jpg)
+
+![](docs/screenshots/4.jpg)
+
+![](docs/screenshots/5.jpg)
+
 ## Building
 
 See [build instructions](docs/build.md).
