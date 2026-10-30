@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AssemblyName>CustomAlbums.Android</AssemblyName>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <InteropDirectory Condition="'$(InteropDirectory)'==''">../../artifacts/interop-device/Il2CppAssemblies</InteropDirectory>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../Shared/LaunchFileVerification.cs" Link="LaunchFileVerification.cs" />
+    <EmbeddedResource Include="Assets/minkyu-cat.png" LogicalName="Minkyu.SectionIcon.png" />
+    <ProjectReference Include="../CustomAlbums.Core/CustomAlbums.Core.csproj" />
+    <Reference Include="MelonLoader">
+      <HintPath>../../tools/melon_data/MelonLoader/net8/MelonLoader.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Il2CppInterop.Runtime">
+      <HintPath>../../tools/melon_data/MelonLoader/net8/Il2CppInterop.Runtime.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Il2CppInterop.Common">
+      <HintPath>../../tools/melon_data/MelonLoader/net8/Il2CppInterop.Common.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>../../tools/melon_data/MelonLoader/net8/0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="$(InteropDirectory)/*.dll">
+      <Private>false</Private>
+    </Reference>
+    <PackageReference Include="NVorbis" Version="0.10.5" />
+    <PackageReference Include="NLayer" Version="1.16.0" />
+  </ItemGroup>
+  <Target Name="CheckAndroidInterop" BeforeTargets="ResolveReferences">
+    <Error Condition="!Exists('$(InteropDirectory)/Assembly-CSharp.dll')" Text="Generate Android IL2CPP interop assemblies first; do not substitute PC wrappers." />
+  </Target>
+</Project>
