@@ -1,6 +1,6 @@
 # Minkyu
 
-Play custom Muse Dash songs on Android. No root needed.
+Play custom Muse Dash songs on Android.
 
 ## Usage
 

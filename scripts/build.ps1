@@ -13,6 +13,14 @@ try {
         & dotnet build "src/$name" -c Release --nologo
         if ($LASTEXITCODE -ne 0) { throw "Build failed: $name" }
     }
+    $bootstrap = Join-Path $root 'build/bootstrap'
+    New-Item -ItemType Directory -Force "$bootstrap/classes", "$bootstrap/dex" | Out-Null
+    & "$JavaSdkDirectory/bin/javac.exe" --release 8 -classpath "$AndroidSdkDirectory/platforms/android-36/android.jar" -d "$bootstrap/classes" src/Minkyu.Bootstrap/GameActivity.java
+    if ($LASTEXITCODE -ne 0) { throw 'Game bootstrap compilation failed' }
+    & "$JavaSdkDirectory/bin/jar.exe" cf "$bootstrap/bootstrap.jar" -C "$bootstrap/classes" .
+    if ($LASTEXITCODE -ne 0) { throw 'Game bootstrap archive failed' }
+    & "$AndroidSdkDirectory/build-tools/36.0.0/d8.bat" --release --min-api 24 --lib "$AndroidSdkDirectory/platforms/android-36/android.jar" --output "$bootstrap/dex" "$bootstrap/bootstrap.jar"
+    if ($LASTEXITCODE -ne 0) { throw 'Game bootstrap dex compilation failed' }
     & python tools/build_payload.py
     if ($LASTEXITCODE -ne 0) { throw 'Payload build failed' }
     & dotnet build src/Minkyu.Android -c Release "-p:JavaSdkDirectory=$JavaSdkDirectory" "-p:AndroidSdkDirectory=$AndroidSdkDirectory" --nologo

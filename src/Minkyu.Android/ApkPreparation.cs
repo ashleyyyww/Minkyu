@@ -32,6 +32,7 @@ internal static class ApkPreparation
     private const int VersionCode = 626;
     private const string Il2CppPath = "lib/arm64-v8a/libil2cpp.so";
     private const string MetadataPath = "assets/bin/Data/Managed/Metadata/global-metadata.dat";
+    private const string BootstrapPath = "assets/minkyu-bootstrap.dex";
     private const string Il2CppSha = "e9713ee0a96778e0e24243b7bfac67302bf351ae6e246f5d821e58c41759e2f3";
     private const string MetadataSha = "fa49bf33f529c28d159e16c29bbf2daeef3585dc533e0b4628dd9b9f62a251fd";
     private const long MaxEntryBytes = 512L * 1024 * 1024;
@@ -132,6 +133,14 @@ internal static class ApkPreparation
                         if (copied != file.Size || Hex(hash.GetHashAndReset()) != file.Sha256)
                             throw new InvalidDataException("Loader payload integrity check failed: " + file.Path);
                     }
+                    var bootstrap = description.Files[BootstrapPath];
+                    total = CheckedTotal(total, bootstrap.Size);
+                    using var bootstrapInput = payloadEntries[BootstrapPath].Open();
+                    using var bootstrapOutput = output.CreateEntry(BootstrapDexPath(sourceEntries), CompressionLevel.Optimal).Open();
+                    using var bootstrapHash = IncrementalHash.CreateHash(HashAlgorithmName.SHA256);
+                    if (CopyChecked(bootstrapInput, bootstrapOutput, bootstrap.Size, bootstrapHash, cancellation) != bootstrap.Size
+                        || Hex(bootstrapHash.GetHashAndReset()) != bootstrap.Sha256)
+                        throw new InvalidDataException("Game bootstrap integrity check failed.");
                 }
             }
 
@@ -190,7 +199,7 @@ internal static class ApkPreparation
             RequireUniqueFields(item);
             var path = item.GetProperty("path").GetString() ?? throw new InvalidDataException("Missing loader payload path.");
             ValidateEntryPath(path);
-            if (!(path.StartsWith("assets/MelonLoader/", StringComparison.Ordinal) || path.StartsWith("assets/dotnet/", StringComparison.Ordinal) || path.StartsWith("assets/copyToBase/", StringComparison.Ordinal) || path == "assets/lemon_patch_date.txt" || NativeOverrides.Contains(path)))
+            if (!(path.StartsWith("assets/MelonLoader/", StringComparison.Ordinal) || path.StartsWith("assets/dotnet/", StringComparison.Ordinal) || path.StartsWith("assets/copyToBase/", StringComparison.Ordinal) || path == "assets/lemon_patch_date.txt" || path == BootstrapPath || NativeOverrides.Contains(path)))
                 throw new InvalidDataException("Loader payload may not replace game content: " + path);
             var size = item.GetProperty("size").GetInt64();
             if (size < 0 || size > MaxEntryBytes)
@@ -200,7 +209,7 @@ internal static class ApkPreparation
                 throw new InvalidDataException("Duplicate loader payload path: " + path);
         }
 
-        foreach (var required in NativeOverrides.Concat(new[] { "assets/MelonLoader/net8/MelonLoader.dll", "assets/copyToBase/Mods/CustomAlbums.Android.dll" }))
+        foreach (var required in NativeOverrides.Concat(new[] { "assets/MelonLoader/net8/MelonLoader.dll", "assets/copyToBase/Mods/CustomAlbums.Android.dll", BootstrapPath }))
             if (!files.ContainsKey(required))
                 throw new InvalidDataException("Loader payload is incomplete: " + required);
         return new Payload(files);
@@ -298,6 +307,19 @@ internal static class ApkPreparation
         Flag("debuggable", 16842767);
         Flag("extractNativeLibs", 16844010);
         Flag("requestLegacyExternalStorage", 16844291);
+        var bootstrap = new AxmlElement("activity");
+        bootstrap.Attributes.Add(new AxmlAttribute("name", AndroidNamespace, 16842755, "app.minkyu.bootstrap.GameActivity"));
+        bootstrap.Attributes.Add(new AxmlAttribute("exported", AndroidNamespace, 16842768, true));
+        bootstrap.Attributes.Add(new AxmlAttribute("screenOrientation", AndroidNamespace, 16842782, 0));
+        bootstrap.Attributes.Add(new AxmlAttribute("configChanges", AndroidNamespace, 16842783, 0x80 | 0x400));
+        foreach (var activity in application.Children.Where(e => e.Name is "activity" or "activity-alias").ToArray())
+            foreach (var filter in activity.Children.Where(e => e.Name == "intent-filter"
+                && e.Children.Any(c => c.Name == "category" && c.Attributes.Any(a => a.Name == "name" && a.Value as string == "android.intent.category.LAUNCHER"))).ToArray())
+            {
+                activity.Children.Remove(filter);
+                bootstrap.Children.Add(filter);
+            }
+        if (bootstrap.Children.Count > 0) application.Children.Add(bootstrap);
         var marker = application.Children.FirstOrDefault(e => e.Name == "meta-data" && e.Attributes.Any(a => a.Name == "name" && a.Namespace == AndroidNamespace && a.Value as string == "minkyu.prepared"));
         if (marker == null)
         {
@@ -316,6 +338,12 @@ internal static class ApkPreparation
         VerifyMember(entries, MetadataPath, MetadataSha, cancellation);
         foreach (var file in payload.Files.Values)
             VerifyMember(entries, file.Path, file.Sha256, cancellation);
+        var dex = entries.Keys.Where(p => p.StartsWith("classes", StringComparison.Ordinal) && p.EndsWith(".dex", StringComparison.Ordinal))
+            .Any(p => {
+                using var stream = entries[p].Open();
+                return Hex(SHA256.HashData(stream)) == payload.Files[BootstrapPath].Sha256;
+            });
+        if (!dex) throw new InvalidDataException("Prepared game is missing the startup activity.");
         using var fileStream = File.OpenRead(path);
         var tailLength = (int)Math.Min(65557, fileStream.Length);
         var tail = new byte[tailLength];
@@ -490,6 +518,12 @@ internal static class ApkPreparation
     }
 
     private static string Hex(byte[] bytes) => Convert.ToHexString(bytes).ToLowerInvariant();
+    private static string BootstrapDexPath(Dictionary<string, ZipArchiveEntry> entries)
+    {
+        var index = 2;
+        while (entries.ContainsKey($"classes{index}.dex")) index++;
+        return $"classes{index}.dex";
+    }
     private static bool IsSignature(string path) => path.StartsWith("META-INF/", StringComparison.OrdinalIgnoreCase);
     private static void ValidateEntryPath(string path)
     {
